@@ -13,19 +13,33 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           Container(
             color: Colors.red,
-            height: 80,
-            padding: EdgeInsets.all(5),
+            height: 20,
+          ),
+          Container(
+            color: Colors.red,
+            height: 60,
+            padding: EdgeInsets.all(15),
             child: Row(
               children: <Widget>[
                 Expanded(
-                  flex: 1,
-                  child: TextField(
-                    style: TextStyle(height: 2, color: Colors.black38),
-                    decoration: InputDecoration(
-                        border: InputBorder.none, fillColor: Colors.white),
+                    flex: 1,
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(6))),
+                      child: TextField(
+                        style: TextStyle(color: Colors.black38),
+                        decoration: InputDecoration(border: InputBorder.none),
+                      ),
+                    )),
+                Container(
+                  margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: Icon(
+                    Icons.camera_alt,
+                    color: Colors.white,
                   ),
-                ),
-                Icon(Icons.camera_alt)
+                )
               ],
             ),
           )

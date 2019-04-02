@@ -139,12 +139,17 @@ class _NewsListState extends State<NewsList> {
         widget.typeName +
         '&key=f835e23f8bbaae262c2b542d63867cd0');
     //print(response.data);
-    var result = json.decode(response.data);
-    print(result['reason']);
+    Map<String,dynamic> result = json.decode(response.data);
+    print(result['reason'].toString());
   }
 
   @override
   Widget build(BuildContext context) {
     return Container();
   }
+}
+
+
+class Name {
+  
 }

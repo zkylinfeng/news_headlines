@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'dart:convert';
+import 'model/news_list.dart';
+import 'dart:io';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,46 +20,7 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: TabViews()
-        //  Column(
-        //   children: <Widget>[
-        //     Container(
-        //       color: Colors.red,
-        //       height: 20,
-        //     ),
-        //     Container(
-        //       color: Colors.red,
-        //       height: 60,
-        //       padding: EdgeInsets.all(15),
-        //       child: Row(
-        //         children: <Widget>[
-        //           Expanded(
-        //               flex: 1,
-        //               child: Container(
-        //                 padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-        //                 decoration: BoxDecoration(
-        //                     color: Colors.white,
-        //                     borderRadius: BorderRadius.all(Radius.circular(6))),
-        //                 child: TextField(
-        //                   style: TextStyle(color: Colors.black38),
-        //                   decoration: InputDecoration(border: InputBorder.none),
-        //                 ),
-        //               )),
-        //           Container(
-        //             margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-        //             child: Icon(
-        //               Icons.camera_alt,
-        //               color: Colors.white,
-        //             ),
-        //           )
-        //         ],
-        //       ),
-        //     ),
-        //     TabViews(),
-
-        //   ],
-        // ),
-        );
+    return Scaffold(body: TabViews());
   }
 }
 
@@ -98,6 +61,35 @@ class _TabViewsState extends State<TabViews>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.red,
+          title: Container(
+            color: Colors.red,
+            height: 60,
+            padding: EdgeInsets.all(1),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(6))),
+                      child: TextField(
+                        style: TextStyle(color: Colors.black38),
+                        decoration: InputDecoration(border: InputBorder.none),
+                      ),
+                    )),
+                Container(
+                  margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: Icon(
+                    Icons.camera_alt,
+                    color: Colors.white,
+                  ),
+                )
+              ],
+            ),
+          ),
           bottom: TabBar(
             isScrollable: true,
             controller: tabController,
@@ -127,6 +119,7 @@ class NewsList extends StatefulWidget {
 }
 
 class _NewsListState extends State<NewsList> {
+  List<News> list = [];
   @override
   void initState() {
     getList();
@@ -135,21 +128,78 @@ class _NewsListState extends State<NewsList> {
 
   getList() async {
     Dio dio = new Dio();
+    dio.options.contentType =
+        ContentType.parse("application/json;charset=UTF-8");
     Response response = await dio.get('http://v.juhe.cn/toutiao/index?type=' +
         widget.typeName +
         '&key=f835e23f8bbaae262c2b542d63867cd0');
-    //print(response.data);
-    Map<String,dynamic> result = json.decode(response.data);
-    print(result['reason'].toString());
+    print(response.data);
+    if (response.data['result'] == null) {
+      Fluttertoast.showToast(
+          msg: response.data['reason'], gravity: ToastGravity.CENTER);
+    } else {
+      Result result = Result.fromJson(response.data['result']);
+      setState(() {
+        list = result.data;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return ListView.builder(
+      itemCount: list.length,
+      itemBuilder: (BuildContext context, int position) {
+        return Container(
+          padding: EdgeInsets.all(10),
+          child: Row(
+            children: <Widget>[
+              Image.network(
+                list[position].thumbnail_pic_s,
+                width: 150.0,
+                height: 120.0,
+                fit: BoxFit.fill,
+              ),
+              Expanded(
+                  child: Container(
+                height: 120,
+                margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 5,
+                      child: Text(
+                        list[position].title,
+                        textDirection: TextDirection.rtl,
+                        softWrap: true,
+                        textAlign: TextAlign.left,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(list[position].author_name),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              list[position].author_name,
+                              textAlign: TextAlign.right,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ))
+            ],
+          ),
+        );
+      },
+    );
   }
-}
-
-
-class Name {
-  
 }

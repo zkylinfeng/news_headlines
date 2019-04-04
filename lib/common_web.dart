@@ -22,15 +22,20 @@ class NewsWebPage extends StatefulWidget {
 class NewsWebPageState extends State<NewsWebPage> {
   String news_url;
   String title;
+
   // 标记是否是加载中
   bool loading = true;
+
   // 标记当前页面是否是我们自定义的回调页面
   bool isLoadingCallbackPage = false;
   GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey();
+
   // URL变化监听器
   StreamSubscription<String> onUrlChanged;
+
   // WebView加载状态变化监听器
   StreamSubscription<WebViewStateChanged> onStateChanged;
+
   // 插件提供的对象，该对象用于WebView的各种操作
   FlutterWebviewPlugin flutterWebViewPlugin = new FlutterWebviewPlugin();
 
@@ -78,7 +83,7 @@ class NewsWebPageState extends State<NewsWebPage> {
   Widget build(BuildContext context) {
     List<Widget> titleContent = [];
     titleContent.add(new Text(
-      title.substring(0,10),
+      title.length > 10 ? title.substring(0, 10) : title,
       style: new TextStyle(color: Colors.white),
     ));
     if (loading) {
@@ -89,7 +94,8 @@ class NewsWebPageState extends State<NewsWebPage> {
     // WebviewScaffold是插件提供的组件，用于在页面上显示一个WebView并加载URL
     return new WebviewScaffold(
       key: scaffoldKey,
-      url: news_url, // 登录的URL
+      url: news_url,
+      // 登录的URL
       appBar: new AppBar(
         title: new Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -97,8 +103,10 @@ class NewsWebPageState extends State<NewsWebPage> {
         ),
         iconTheme: new IconThemeData(color: Colors.white),
       ),
-      withZoom: true, // 允许网页缩放
-      withLocalStorage: true, // 允许LocalStorage
+      withZoom: true,
+      // 允许网页缩放
+      withLocalStorage: true,
+      // 允许LocalStorage
       withJavascript: true, // 允许执行js代码
     );
   }
@@ -107,9 +115,9 @@ class NewsWebPageState extends State<NewsWebPage> {
   void dispose() {
     // 回收相关资源
     // Every listener should be canceled, the same should be done with this stream.
-   // onUrlChanged.cancel();
-   // onStateChanged.cancel();
-    //flutterWebViewPlugin.dispose();
+    onUrlChanged.cancel();
+    onStateChanged.cancel();
+    flutterWebViewPlugin.dispose();
     super.dispose();
   }
 }

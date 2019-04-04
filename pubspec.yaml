@@ -27,6 +27,7 @@ dependencies:
   dio: ^2.1.0
   fluttertoast: ^3.0.1
   flutter_webview_plugin: ^0.3.3
+  pull_to_refresh: ^1.2.0
   
 
 dev_dependencies:

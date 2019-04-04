@@ -1,6 +1,15 @@
 # news_headlines
 
 A new Flutter project.
+flutter 新闻头条
+
+插件版本
+cupertino_icons: ^0.1.2
+dio: ^2.1.0
+fluttertoast: ^3.0.1
+flutter_webview_plugin: ^0.3.3
+pull_to_refresh: ^1.2.0
+
 
 ## Getting Started
 
